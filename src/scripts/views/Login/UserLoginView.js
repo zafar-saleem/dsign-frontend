@@ -1,6 +1,13 @@
 import $ from 'jquery';
 import LoginTemplate from '../../../templates/login/Login.handlebars';
 
+const EVENTS = {
+    CLICK: 'click'
+};
+
+let $body = $('body');
+let $loginContainer = $('.ds-m-login');
+
 class UserLoginView {
 
     constructor(model) {
@@ -8,11 +15,11 @@ class UserLoginView {
 
         this._render();
 
-        $('body').on('click', '.ds-js-btn-login', this._handleLogin.bind(this));
+        $body.on(EVENTS.CLICK, '.ds-js-btn-login', this._handleLogin.bind(this));
     }
 
     _render() {
-        $('.ds-m-login').html(LoginTemplate());
+        $loginContainer.html(LoginTemplate());
     }
 
     _handleLogin(event) {
@@ -23,18 +30,20 @@ class UserLoginView {
             email: email,
             password: password
         }).then(this._onLogin.bind(this));
+
         event.preventDefault();
     }
 
     _onLogin(response) {
-        if (response.errors) {
+        console.log(response);
+        if (!response) {
             return;
         }
 
-        response.forEach(this._handleOnLoginErrors);
+        response.forEach(this._onHandleLoginErrors);
     }
 
-    _handleOnLoginErrors(error) {
+    _onHandleLoginErrors(error) {
         if (error.param === 'email') {
             $('.ds-js-login-email').parent().addClass('has-error');
         }

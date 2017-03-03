@@ -8,7 +8,7 @@ const EVENTS = {
 
 let email, password, repeatPassword;
 
-class UserRegisterView {
+class RegisterUserView {
 
     constructor(model, elements) {
         this._model = model;
@@ -42,27 +42,28 @@ class UserRegisterView {
     }
 
     _handleRegistrationResponse(response) {
-        console.log(response);
-        if (!response.errors) {
-            window.location = response.redirectUrl;
+        if (response) {
+            response.forEach(this._onHandleRegistrationErrors);
             return;
         }
 
-        response.forEach((item, index) => {
-            if (item.param === 'email') {
-                $('.ds-js-register-email').parent().addClass('has-error');
-            }
+        $('.ds-m-wrapper').html(DashboardTemplate());
+    }
 
-            if (item.param === 'password') {
-                $('.ds-js-register-password').parent().addClass('has-error');
-            }
+    _handleOnRegistrationErrors(item) {
+        if (item.param === 'email') {
+            $('.ds-js-register-email').parent().addClass('has-error');
+        }
 
-            if (item.param === 'repeatPassword') {
-                $('.ds-js-register-rpassword').parent().addClass('has-error');
-            }
-        });
+        if (item.param === 'password') {
+            $('.ds-js-register-password').parent().addClass('has-error');
+        }
+
+        if (item.param === 'repeatPassword') {
+            $('.ds-js-register-rpassword').parent().addClass('has-error');
+        }
     }
 }
 
-export default UserRegisterView;
+export default RegisterUserView;
 
